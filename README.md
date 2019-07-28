@@ -42,13 +42,22 @@ Full documentation is available at https://marcin-piela.github.io/fetching-libra
 ## Short example of use
 
 ```js
-import { Action, createClient } from 'fetching-library';
+import { Action, createClient, cache } from 'fetching-library';
+
+const cache = createCache(
+  (action) => {
+    return action.method === 'GET';
+  },
+  (response) => {
+    return new Date().getTime() - response.timestamp < 100000;
+  },
+);
 
 const client = createClient({
   //None of the options is required
   requestInterceptors: [],
   responseInterceptors: [],
-  cacheProvider: cacheProvider,
+  cacheProvider: cache,
 });
 
 const action:Action= { 
