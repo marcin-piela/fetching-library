@@ -42,18 +42,27 @@ Full documentation is available at https://marcin-piela.github.io/fetching-libra
 ## Short example of use
 
 ```js
-import { useQuery } from 'fetching-library';
+import { Action, createClient } from 'fetching-library';
 
-const fetchUsersList = {
+const client = createClient({
+  //None of the options is required
+  requestInterceptors: [],
+  responseInterceptors: [],
+  cacheProvider: cacheProvider,
+});
+
+const action:Action= { 
   method: 'GET',
   endpoint: '/users',
 };
 
-export const UsersListContainer = () => {
-  const { loading, payload, error, query } = useQuery(fetchUsersList);
+client.query(action).then(response => {
+  //response.status
+  //response.error
+  //response.errorObject
+  //response.payload
+});
 
-  return <UsersList loading={loading} error={error} users={payload} onReload={query} />;
-};
 ```
 
 ## Do you want to use it in react app?

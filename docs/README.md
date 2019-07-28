@@ -71,6 +71,7 @@ const client = createClient(options);
 
 ```js
 import { Action } from 'fetching-library';
+
 const action:Action= { 
   method: 'GET',
   endpoint: '/users',
