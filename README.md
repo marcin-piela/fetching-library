@@ -13,7 +13,7 @@ Simple and powerful fetch API extension. Use request and response interceptors t
 ---
 
 [![Build Status][build-badge]][build] [![version][version-badge]][package] ![downloads][downloads-badge] [![MIT License][license-badge]][license]
- [![PRs Welcome][prs-badge]][prs] [![Code of Conduct][coc-badge]][coc] ![Code of Conduct][gzip-badge] [![codecov](https://codecov.io/gh/marcin-piela/fetching-library/branch/master/graph/badge.svg)](https://codecov.io/gh/marcin-piela/fetching-library)
+ [![PRs Welcome][prs-badge]][prs] [![Code of Conduct][coc-badge]][coc] ![Gzip badge][gzip-badge] [![codecov](https://codecov.io/gh/marcin-piela/fetching-library/branch/master/graph/badge.svg)](https://codecov.io/gh/marcin-piela/fetching-library)
 
 ✅ Zero dependencies
 
