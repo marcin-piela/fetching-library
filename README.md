@@ -16,7 +16,7 @@ Simple and powerful fetch API extension. Use request and response interceptors t
  [![PRs Welcome][prs-badge]][prs] [![Code of Conduct][coc-badge]][coc] ![Gzip badge][gzip-badge] [![codecov](https://codecov.io/gh/marcin-piela/fetching-library/branch/master/graph/badge.svg)](https://codecov.io/gh/marcin-piela/fetching-library)
 
 ✅ Zero dependencies
-
+c
 ✅ SSR support 
 
 ✅ Uses Fetch API
