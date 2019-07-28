@@ -39,6 +39,18 @@ Request and response interceptors allows you to easily customize connection with
 
 Full documentation is available at https://marcin-piela.github.io/fetching-library
 
+## Installation
+
+Run the following from your project root :
+
+```sh
+npm install fetching-library
+```
+or
+```sh
+yarn add fetching-library
+```
+
 ## Short example of use
 
 ```js
