@@ -3,6 +3,7 @@ import fetchMock from 'fetch-mock';
 import { createClient } from '../../../src/client/client';
 import { createCache } from '../../../src/cache/cache';
 import { Action, QueryResponse } from '../../../src/client/client.types';
+import { QueryError } from '../../../src/client/errors/QueryError';
 
 describe('Client test', () => {
   it('responses with queryResponse object on success fetch', async () => {
@@ -118,6 +119,26 @@ describe('Client test', () => {
     const queryResponse = await client.query(action);
 
     expect(queryResponse.payload).toEqual({ users: [] });
+  });
+
+  it('adds errorObject when action has configured emitErrorForStatuses ', async () => {
+    const action: Action = {
+      method: 'GET',
+      endpoint: 'http://example.com/query-error',
+      config: {
+        emitErrorForStatuses: [200],
+      },
+    };
+
+    fetchMock.get(action.endpoint, {
+      users: [],
+    });
+
+    const client = createClient({});
+
+    const queryResponse = await client.query(action);
+
+    expect(queryResponse.errorObject).toBeInstanceOf(QueryError);
   });
 
   it('returns cached value on second fetch', async () => {
