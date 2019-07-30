@@ -9,6 +9,7 @@ describe('Logger test', () => {
     console.group = jest.fn();
     console.groupEnd = jest.fn();
   });
+
   it('logs request with default options', () => {
     const action: Action = {
       method: 'GET',
@@ -30,6 +31,7 @@ describe('Logger test', () => {
     );
     expect(console.log).toHaveBeenCalledWith('%c action', 'font-weight: bold', action);
   });
+
   it('logs response with custom options', () => {
     const action: Action = {
       method: 'GET',
@@ -58,6 +60,7 @@ describe('Logger test', () => {
     expect(console.log).toHaveBeenNthCalledWith(1, '%c action', 'font-weight: bold', action);
     expect(console.log).toHaveBeenNthCalledWith(2, '%c response', 'font-weight: bold', response);
   });
+
   it('logs response with failed response', () => {
     const action: Action = {
       method: 'GET',
@@ -85,6 +88,7 @@ describe('Logger test', () => {
     expect(console.log).toHaveBeenNthCalledWith(1, '%c action', 'font-weight: bold', action);
     expect(console.log).toHaveBeenNthCalledWith(2, '%c response', 'font-weight: bold', response);
   });
+
   it('defaults to log method if group not supported', () => {
     console.groupCollapsed = jest.fn(() => {
       throw Error;

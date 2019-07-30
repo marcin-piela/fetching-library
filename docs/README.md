@@ -104,7 +104,7 @@ export const requestHostInterceptor: host => client => async action => {
     endpoint: `${host}${action.endpoint}`,
   };
 };
-````
+```
 
 And then you have to add it to the Client:
 
@@ -143,7 +143,7 @@ export const responseInterceptor = client => async (action, response) => {
 
   return response;
 };
-````
+```
 
 And then you have to add it to the Client:
 
@@ -152,6 +152,65 @@ import { createClient } from 'fetching-library';
 
 export const client = createClient({
   responseInterceptors: [responseInterceptor]
+});
+```
+
+## Logger
+
+With __request__ and __response interceptors__ you can use simple logger provided by __fetching-library__
+
+```js
+import { createLogger } from 'fetching-library';
+
+const logger = createLogger(options);
+```
+
+#### Available options
+
+| option      | description                               | required      | default value |
+| ------------| ----------------------------------------- | ------------- | ------------- |
+| collapse    | log group should be collapsed             | no            | true         |
+| show        | logs should be shown                      | no            | true          |
+
+You can create request interceptor
+
+
+```js
+export const requestLoggerInterceptor = logger => client => async action => {
+  logger({ action })
+
+  return action;
+};
+```
+
+And response interceptor
+
+
+```js
+export const responseLoggerInterceptor = logger => client => async (action, response) => {
+  logger({ action, response })
+
+  return response;
+};
+```
+
+#### Available options
+
+| option      | description                | required |
+| ------------| -------------------------- | -------- |
+| action      | [`Action`][] object        | yes      |
+| response    | [`QueryResponse`][] object | no       |
+
+And then add it to the Client:
+
+```js
+import { createLogger, createClient } from 'fetching-library';
+
+const logger = createLogger({})
+
+export const client = createClient({
+  requestInterceptors: [requestLoggerInterceptor(logger)]
+  responseInterceptors: [responseInterceptor(logger)]
 });
 ```
 
