@@ -6,7 +6,7 @@ export type ActionConfig = {
   emitErrorForStatuses?: number[];
 };
 
-export type Action<T = any> = {
+export type Action<T = {}> = {
   endpoint: string;
   method: Method;
   body?: any;
@@ -22,6 +22,7 @@ export type Action<T = any> = {
   signal?: AbortSignal | null;
   window?: any;
   config?: ActionConfig;
+  id?: string;
 } & T;
 
 export type QueryResponse<T = any> = {
