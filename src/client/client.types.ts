@@ -29,8 +29,8 @@ export type QueryResponse<T = any> = {
   status?: number;
   error: boolean;
   errorObject?: any;
-  payload?: T;
   headers?: Headers;
+  response?: T;
 };
 
 export type Client<R = any> = {

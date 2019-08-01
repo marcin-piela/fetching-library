@@ -1,3 +1,4 @@
+import { requestJsonInterceptor, responseJsonInterceptor } from '../interceptors';
 import { Action, ClientOptions, QueryResponse, RequestInterceptor, ResponseInterceptor } from './client.types';
 import { QueryError } from './errors/QueryError';
 
@@ -11,8 +12,6 @@ export type HandleResponseInterceptors<R> = (
   response: QueryResponse<any>,
   interceptors: Array<ResponseInterceptor<R, any>>,
 ) => Promise<QueryResponse<any>>;
-
-const emptyCodes = [204, 205];
 
 export const createClient = <R = any>(clientOptions: ClientOptions<R>) => {
   const cache = clientOptions.cacheProvider;
@@ -35,52 +34,35 @@ export const createClient = <R = any>(clientOptions: ClientOptions<R>) => {
     cache,
     query: async <T>(actionInit: Action<R>): Promise<QueryResponse<T>> => {
       try {
-        const action = await handleRequestInterceptors(actionInit, clientOptions.requestInterceptors || []);
-        const { endpoint, body, ...options } = action;
+        const action = await handleRequestInterceptors(
+          actionInit,
+          clientOptions.requestInterceptors || [requestJsonInterceptor],
+        );
+        const { endpoint, ...options } = action;
 
         if (cache) {
-          const cachedResponse = cache.get(action);
+          const cachedResponse = cache.get(actionInit);
 
           if (cachedResponse) {
             return cachedResponse;
           }
         }
 
-        const headers = { ...{ 'Content-Type': 'application/json; charset=utf-8' }, ...options.headers };
-        const shouldStringify = headers['Content-Type'].indexOf('json') !== -1;
-
-        const response = await fetch(endpoint, {
-          body: body ? (shouldStringify ? JSON.stringify(body) : body) : undefined,
-          cache: options.cache,
-          credentials: options.credentials,
-          headers,
-          integrity: options.integrity,
-          keepalive: options.keepalive,
-          method: options.method,
-          mode: options.mode,
-          redirect: options.redirect,
-          referrer: options.referrer,
-          referrerPolicy: options.referrerPolicy,
-          signal: options.signal,
-          window: options.window,
-        });
-
-        const contentType = response.headers.get('Content-Type');
-        const isJSON = emptyCodes.indexOf(response.status) === -1 && contentType && contentType.indexOf('json') !== -1;
+        const response = await fetch(endpoint, options);
 
         const queryResponse = await handleResponseInterceptors(
           action,
           {
             error: !response.ok,
             headers: response.headers,
-            payload: isJSON ? await response.json() : await response.text(),
+            response,
             status: response.status,
           },
-          clientOptions.responseInterceptors || [],
+          clientOptions.responseInterceptors || [responseJsonInterceptor],
         );
 
         if (cache && response.ok) {
-          cache.add(action, queryResponse);
+          cache.add(actionInit, queryResponse);
         }
 
         if (
