@@ -87,9 +87,31 @@ client.cache.get(action);
 
 | option      | description                             | required | default value |
 | ------------------------- | ----------------------------------------- | ------------- | ------------- |
-| requestInterceptors         | array of requestInterceptors                | no         | []               |
-| responseInterceptors | array of responseInterceptors | no        | []      |
+| requestInterceptors         | array of requestInterceptors                | no         | [requestJsonInterceptor]               |
+| responseInterceptors | array of responseInterceptors | no        | [responsetJsonInterceptor]      |
 | cacheProvider                   | cache provider                    | no                   | undefined      |
+
+
+## Interceptors
+
+There are two types of interceptors: __request interceptors__ and __response interceptors__.
+
+__Fetching-library__ provides you with two interceptors (__requestJsonInterceptor__ and __responsetJsonInterceptor__) out of the box which are used by default.
+
+If you add your own interceptors and still want to use them, you have to add them explicitly.
+
+```js
+import { requestJsonInterceptor, 
+         responsetJsonInterceptor, 
+         createClient } from 'fetching-library';
+
+const client = createClient({
+  requestInterceptors: [requestJsonInterceptor],
+  responseInterceptors: [responsetJsonInterceptor]
+});
+```
+
+---
 
 ## Request interceptors
 
@@ -322,7 +344,7 @@ This is the results of API query
 | status         | HTTP response status       | number | no               |
 | error | error flag | bool         | yes 
 | errorObject | error object | object         | no 
-| payload | response payload from API | any         | no 
+| response | response object from API | any         | no 
 | headers | response headers | string         | no 
 
 ## Example
@@ -334,7 +356,7 @@ Example response for `/users` request:
   "status": 200,
   "error": false,
   "errorObject": undefined,
-  "payload": [],
+  "response": Response,
   "headers": Headers,
 }
 ```

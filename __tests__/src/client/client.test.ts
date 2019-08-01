@@ -4,8 +4,34 @@ import { createClient } from '../../../src/client/client';
 import { createCache } from '../../../src/cache/cache';
 import { Action, QueryResponse } from '../../../src/client/client.types';
 import { QueryError } from '../../../src/client/errors/QueryError';
+import { responseJsonInterceptor } from '../../../src/interceptors';
 
 describe('Client test', () => {
+  it('responses with Response object by default', async () => {
+    const action: Action = {
+      method: 'GET',
+      endpoint: 'http://example.com/default',
+    };
+
+    fetchMock.get(action.endpoint, {
+      users: [],
+    });
+
+    const client = createClient({
+      requestInterceptors: [],
+      responseInterceptors: [],
+    });
+
+    const queryResponse: QueryResponse<Response> = await client.query(action);
+
+    const payload = queryResponse.response && (await queryResponse.response.json());
+
+    expect(payload).toEqual({ users: [] });
+    expect(queryResponse.status).toEqual(200);
+    expect(queryResponse.error).toEqual(false);
+    queryResponse.headers && expect(queryResponse.headers.get('Content-Length')).toEqual('12');
+  });
+
   it('responses with queryResponse object on success fetch', async () => {
     const action: Action = {
       method: 'GET',
@@ -20,7 +46,7 @@ describe('Client test', () => {
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.payload).toEqual({ users: [] });
+    expect(queryResponse.response).toEqual({ users: [] });
     expect(queryResponse.status).toEqual(200);
     expect(queryResponse.error).toEqual(false);
     queryResponse.headers && expect(queryResponse.headers.get('Content-Length')).toEqual('12');
@@ -32,14 +58,14 @@ describe('Client test', () => {
       endpoint: 'http://example.com/204',
     };
 
-    fetchMock.get(action.endpoint, async () => '');
+    fetchMock.get(action.endpoint, { status: 204 });
 
     const client = createClient({});
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.payload).toEqual('');
-    expect(queryResponse.status).toEqual(200);
+    expect(queryResponse.response).toEqual('');
+    expect(queryResponse.status).toEqual(204);
     expect(queryResponse.error).toEqual(false);
   });
 
@@ -57,7 +83,7 @@ describe('Client test', () => {
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.payload).toEqual(undefined);
+    expect(queryResponse.response).toEqual(undefined);
     expect(queryResponse.status).toEqual(undefined);
     expect(queryResponse.error).toEqual(true);
     queryResponse.headers && expect(queryResponse.headers.get('Content-Length')).toEqual('12');
@@ -76,10 +102,10 @@ describe('Client test', () => {
     });
 
     const responseInterceptor = () => async (action: Action, response: QueryResponse<any>) => {
-      if (response.payload.data) {
+      if (response.response.data) {
         return {
           ...response,
-          payload: response.payload.data,
+          response: response.response.data,
         };
       }
 
@@ -87,12 +113,12 @@ describe('Client test', () => {
     };
 
     const client = createClient({
-      responseInterceptors: [responseInterceptor],
+      responseInterceptors: [responseJsonInterceptor, responseInterceptor],
     });
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.payload).toEqual({ users: [] });
+    expect(queryResponse.response).toEqual({ users: [] });
   });
 
   it('intercepts request when requestInterceptor is configured', async () => {
@@ -118,7 +144,7 @@ describe('Client test', () => {
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.payload).toEqual({ users: [] });
+    expect(queryResponse.response).toEqual({ users: [] });
   });
 
   it('adds errorObject when action has configured emitErrorForStatuses ', async () => {
@@ -169,7 +195,7 @@ describe('Client test', () => {
     });
 
     const queryResponse = await client.query(action);
-    expect(queryResponse.payload).toEqual({ users: [] });
+    expect(queryResponse.response).toEqual({ users: [] });
 
     fetchMock.get(
       action.endpoint,
@@ -184,6 +210,6 @@ describe('Client test', () => {
     );
 
     const cachedQueryResponse = await client.query(action);
-    expect(cachedQueryResponse.payload).toEqual({ users: [] });
+    expect(cachedQueryResponse.response).toEqual({ users: [] });
   });
 });
