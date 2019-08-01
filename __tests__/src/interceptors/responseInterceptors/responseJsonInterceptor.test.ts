@@ -5,6 +5,7 @@ import { responseJsonInterceptor } from '../../../../src/interceptors/responseIn
 
 describe('ResponseJsonIntercepotr test', () => {
   const client = createClient({});
+
   it('responses correctly if Resonse stream has already been readed', async () => {
     const action = {
       endpoint: 'endpoint',

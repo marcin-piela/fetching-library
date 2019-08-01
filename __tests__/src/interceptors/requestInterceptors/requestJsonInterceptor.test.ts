@@ -3,6 +3,7 @@ import { requestJsonInterceptor } from '../../../../src/interceptors/requestInte
 
 describe('RequestJsonIntercepotr test', () => {
   const client = createClient({});
+
   it('defaults to json if content type not provided', async () => {
     const action = {
       body: { user: 'User Name' },

@@ -88,7 +88,7 @@ client.cache.get(action);
 | option      | description                             | required | default value |
 | ------------------------- | ----------------------------------------- | ------------- | ------------- |
 | requestInterceptors         | array of requestInterceptors                | no         | [requestJsonInterceptor]               |
-| responseInterceptors | array of responseInterceptors | no        | [responsetJsonInterceptor]      |
+| responseInterceptors | array of responseInterceptors | no        | [responseJsonInterceptor]      |
 | cacheProvider                   | cache provider                    | no                   | undefined      |
 
 
@@ -96,18 +96,18 @@ client.cache.get(action);
 
 There are two types of interceptors: __request interceptors__ and __response interceptors__.
 
-__Fetching-library__ provides you with two interceptors (__requestJsonInterceptor__ and __responsetJsonInterceptor__) out of the box which are used by default.
+__Fetching-library__ provides you with two interceptors (__requestJsonInterceptor__ and __responseJsonInterceptor__) out of the box which are used by default.
 
 If you add your own interceptors and still want to use them, you have to add them explicitly.
 
 ```js
 import { requestJsonInterceptor, 
-         responsetJsonInterceptor, 
+         responseJsonInterceptor,
          createClient } from 'fetching-library';
 
 const client = createClient({
   requestInterceptors: [requestJsonInterceptor],
-  responseInterceptors: [responsetJsonInterceptor]
+  responseInterceptors: [responseJsonInterceptor]
 });
 ```
 
