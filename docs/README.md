@@ -96,7 +96,7 @@ client.cache.get(action);
 
 There are two types of interceptors: __request interceptors__ and __response interceptors__.
 
-__Fetching-library__ provides you with two interceptors (__requestJsonInterceptor__ and __responseJsonInterceptor__) out of the box which are used by default.
+__Fetching-library__ provides you with two interceptors (__requestJsonInterceptor__ and __responseJsonInterceptor__) out of the box which are used by default (there is also available  __responseTextInterceptor__).
 
 If you add your own interceptors and still want to use them, you have to add them explicitly.
 
@@ -176,6 +176,14 @@ export const client = createClient({
   responseInterceptors: [responseInterceptor]
 });
 ```
+
+#### Build-in interceptors
+
+| Interceptor             | description                                             |
+| ----------------------- | ------------------------------------------------------- |
+| requestJsonInterceptor  | Set up headers content to JSON type and stringifys body |
+| responseJsonInterceptor | Parsing body text as JSON for json content type         |
+| responseTextInterceptor | Resolves response promise with text                     |
 
 ## Logger
 
