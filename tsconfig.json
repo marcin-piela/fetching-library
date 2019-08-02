@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "declarationDir": "types",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "jsx": "react",
