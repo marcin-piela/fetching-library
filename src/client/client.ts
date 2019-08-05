@@ -1,4 +1,4 @@
-import { requestJsonInterceptor, responseJsonInterceptor } from '../interceptors';
+import { requestJsonInterceptor, responseJsonInterceptor, responseTextInterceptor } from '../interceptors';
 import { Action, ClientOptions, QueryResponse, RequestInterceptor, ResponseInterceptor } from './client.types';
 import { QueryError } from './errors/QueryError';
 
@@ -58,7 +58,7 @@ export const createClient = <R = any>(clientOptions: ClientOptions<R>) => {
             response,
             status: response.status,
           },
-          clientOptions.responseInterceptors || [responseJsonInterceptor],
+          clientOptions.responseInterceptors || [responseJsonInterceptor, responseTextInterceptor],
         );
 
         if (cache && response.ok) {
