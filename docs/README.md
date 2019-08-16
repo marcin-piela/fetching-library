@@ -343,7 +343,7 @@ This is the results of API query
 | status         | HTTP response status       | number | no               |
 | error | error flag | bool         | yes 
 | errorObject | error object | object         | no 
-| response | response object from API | any         | no 
+| payload | response object from API (format depends on configured interceptors) | any         | no 
 | headers | response headers | string         | no 
 
 ## Example
@@ -355,7 +355,7 @@ Example response for `/users` request:
   "status": 200,
   "error": false,
   "errorObject": undefined,
-  "response": Response,
+  "payload": [],
   "headers": Headers,
 }
 ```
