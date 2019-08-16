@@ -3,7 +3,6 @@ import fetchMock from 'fetch-mock';
 import { createClient } from '../../../src/client/client';
 import { createCache } from '../../../src/cache/cache';
 import { Action, QueryResponse } from '../../../src/client/client.types';
-import { QueryError } from '../../../src/client/errors/QueryError';
 import { responseJsonInterceptor } from '../../../src/interceptors';
 
 describe('Client test', () => {
@@ -147,27 +146,7 @@ describe('Client test', () => {
     expect(queryResponse.response).toEqual({ users: [] });
   });
 
-  it('adds errorObject when action has configured emitErrorForStatuses ', async () => {
-    const action: Action = {
-      method: 'GET',
-      endpoint: 'http://example.com/query-error',
-      config: {
-        emitErrorForStatuses: [200],
-      },
-    };
-
-    fetchMock.get(action.endpoint, {
-      users: [],
-    });
-
-    const client = createClient({});
-
-    const queryResponse = await client.query(action);
-
-    expect(queryResponse.errorObject).toBeInstanceOf(QueryError);
-  });
-
-  it('returns cached value on second fetch', async () => {
+  it('returns cached value on second fetch and non cached when skipCache flag is provided', async () => {
     const action: Action = {
       method: 'GET',
       endpoint: 'http://example.com/cached-endpoint',
@@ -211,5 +190,12 @@ describe('Client test', () => {
 
     const cachedQueryResponse = await client.query(action);
     expect(cachedQueryResponse.response).toEqual({ users: [] });
+
+    const nonCachedQueryResponse = await client.query(action, true);
+    expect(nonCachedQueryResponse.response).toEqual({ users: [
+      {
+        uuid: 1,
+      },
+    ], });
   });
 });

@@ -25,7 +25,7 @@ Simple and powerful fetch API extension. Use request and response interceptors t
 
 ✅ TypeScript support 
 
-✅ Less than 1k minizipped
+✅ Less than 2k minizipped
 
 ✅ Simple cache provider - easily to extend
 

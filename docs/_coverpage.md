@@ -6,7 +6,7 @@
 
 [![Watch on GitHub][github-watch-badge]][github-watch][![Star on GitHub][github-star-badge]][github-star][![Tweet][twitter-badge]][twitter]
 
-- Simple and lightweight (~1kB minizipped)
+- Simple and lightweight (~2kB minizipped)
 - No dependencies
 - SSR and TypeScript support
 

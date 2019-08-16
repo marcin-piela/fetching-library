@@ -15,7 +15,7 @@ __fetching-library__ -  Simple and powerful fetch API extension. Use request and
 
 ✅ TypeScript support 
 
-✅ Less than 1k minizipped
+✅ Less than 2k minizipped
 
 ✅ Simple cache provider - easily to extend
 
@@ -66,7 +66,7 @@ const client = createClient(options);
 
 | name      | description                | param | response
 | ------------------------- | --------------------------------- | ------------- |------------- |
-| query         | function which dispatch request to API | [`Action`][]  | Promise which resolves to [`QueryResponse`][]
+| query         | function which dispatch request to API | [`Action`][], skipCache flag  | Promise which resolves to [`QueryResponse`][]
 | cache         | cacheProvider object when provided in client options | 
 
 ```js
@@ -77,7 +77,9 @@ const action:Action= {
   endpoint: '/users',
 };
 
-client.query(action);
+const skipCache = false;
+
+client.query(action, skipCache);
 
 client.cache.get(action);
 
@@ -331,14 +333,6 @@ const fetchUsersActions = {
 | redirect | - | [RequestRedirect](https://developer.mozilla.org/en-US/docs/Web/API/Request/redirect)         | no 
 | signal | - | [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) / null         | no 
 | window | - | any         | no 
-| config | additional config of action | see below         | no 
-
-
-### Config object:
-
-| option      | description   | type | required |
-| ------------------------- | ------------------ | ------------- | ------------- |
-| emitErrorForStatuses         | list of HTTP status codes which throw error to allow to catch it in error boundary       | number[] | no               |
 
 ---
 

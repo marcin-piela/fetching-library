@@ -1,5 +1,4 @@
 export * from './client/client';
-export * from './client/errors/QueryError';
 export * from './cache/cache';
 export * from './logger/logger';
 export * from './interceptors';

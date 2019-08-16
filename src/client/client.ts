@@ -1,6 +1,5 @@
 import { requestJsonInterceptor, responseJsonInterceptor, responseTextInterceptor } from '../interceptors';
 import { Action, ClientOptions, QueryResponse, RequestInterceptor, ResponseInterceptor } from './client.types';
-import { QueryError } from './errors/QueryError';
 
 export type HandleRequestInterceptors<R> = (
   action: Action<R>,
@@ -32,7 +31,7 @@ export const createClient = <R = any>(clientOptions: ClientOptions<R>) => {
 
   const client = {
     cache,
-    query: async <T>(actionInit: Action<R>): Promise<QueryResponse<T>> => {
+    query: async <T>(actionInit: Action<R>, skipCache = false): Promise<QueryResponse<T>> => {
       try {
         const action = await handleRequestInterceptors(
           actionInit,
@@ -40,7 +39,7 @@ export const createClient = <R = any>(clientOptions: ClientOptions<R>) => {
         );
         const { endpoint, ...options } = action;
 
-        if (cache) {
+        if (cache && !skipCache) {
           const cachedResponse = cache.get(actionInit);
 
           if (cachedResponse) {
@@ -63,15 +62,6 @@ export const createClient = <R = any>(clientOptions: ClientOptions<R>) => {
 
         if (cache && response.ok) {
           cache.add(actionInit, queryResponse);
-        }
-
-        if (
-          queryResponse.status &&
-          action.config &&
-          action.config.emitErrorForStatuses &&
-          action.config.emitErrorForStatuses.includes(queryResponse.status)
-        ) {
-          throw new QueryError('request-error', queryResponse);
         }
 
         return queryResponse;
