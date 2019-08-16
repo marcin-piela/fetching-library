@@ -12,7 +12,8 @@ export type HandleResponseInterceptors<R> = (
   interceptors: Array<ResponseInterceptor<R, any>>,
 ) => Promise<QueryResponse<any>>;
 
-export const createClient = <R = any>(clientOptions: ClientOptions<R>) => {
+export const createClient = <R = any>(options?: ClientOptions<R>) => {
+  const clientOptions = options || {};
   const cache = clientOptions.cacheProvider;
 
   const handleRequestInterceptors: HandleRequestInterceptors<R> = async (action, interceptors) => {

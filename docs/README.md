@@ -279,10 +279,6 @@ const cache = createCache(
 );
 ```
 
-Example of use:
-
-[![Edit Basic Example](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/marcin-piela/fetching-library/tree/master/examples/cache-provider?module=/src/api/Client.ts)
-
 ## Own CacheProvider
 
 You can create your own cache provider. It should implement this type:
@@ -363,119 +359,6 @@ Example response for `/users` request:
   "headers": Headers,
 }
 ```
-
----
-
-# SSR - server side rendering
-
-To use fetching-library on server side you have to use isomporphic-fetch package ie. https://github.com/developit/unfetch#readme and then use library as in SPA apps.
-
-**Example app for next.js framework (responses are cached for 100s on server side):**
-
-`client.js` - client and cache configuration
-```js
-import { createClient, createCache } from "fetching-library";
-
-const cache = createCache(
-  (action) => {
-    return action.method === 'GET';
-  },
-  (response) => {
-    return new Date().getTime() - response.timestamp < 100000;
-  },
-);
-
-const client = createClient({
-  cacheProvider: cache,
-});
-
-export default client;
-
-```
-
-`pages/_app.js` - in this file we're providing saved cache from server to client and initializing client context
-
-```js
-import App, { Container } from 'next/app';
-import 'isomorphic-unfetch';
-
-import { ClientContextProvider} from "react-fetching-library";
-import client from '../api/client';
-
-class MyApp extends App {
-  static async getInitialProps (appContext) {
-    let appProps = {}
-
-    if (typeof App.getInitialProps === 'function') {
-        appProps = await App.getInitialProps(appContext)
-    }
-
-    return {
-        ...appProps,
-        cacheItems: client.cache.getItems(),
-    }
-  }
-
-  render () {
-    const { Component, pageProps, cacheItems } = this.props
-    client.cache.setItems(cacheItems);
-
-    return (
-      <Container>
-        <ClientContextProvider client={client}>
-          <Component {...pageProps} />
-        </ClientContextProvider>
-      </Container>
-    )
-  }
-}
-
-export default MyApp
-```
-
-`pages/index.js` - in component we're fetching data in `getInitialProps` on server side and then all data are available on client side without additional fetching and everything is rendered by server (no `loading` text in rendered html ;) )
-
-```js
-import React, { useContext } from "react";
-import client from "../api/client";
-import { useQuery, ClientContext} from 'react-fetching-library';
-
-const action = {
-  method: "GET",
-  endpoint: "https://private-34f3a-reactapiclient.apiary-mock.com/users"
-};
-
-const Users = () => {
-  const { loading, payload, error, query } = useQuery(action, true);
-
-  return (
-    <div>
-      {loading && <span>Loading</span>}
-
-      {error && <span>Error</span>}
-
-      {!loading && payload && payload.map((user, index) => (
-        <span key={user.uuid}>
-          {index + 1} - {user.firstName} <br/><br/>
-        </span>
-      ))}
-
-      <button onClick={query}>Reload</button>
-    </div>
-  );
-};
-
-Users.getInitialProps = async () => {
-  await client.query(action);
-
-  return {}
-}
-
-export default Users;
-```
-
-[![Edit Basic Example](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/marcin-piela/fetching-library/tree/master/examples/ssr-nextjs)
-
 
 [`Client`]: #client
 [`Action`]: #action

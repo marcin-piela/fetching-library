@@ -51,10 +51,10 @@ or
 yarn add fetching-library
 ```
 
-## Short example of use
+## Short example of use with caching
 
 ```js
-import { Action, createClient, cache } from 'fetching-library';
+import { createClient, cache, requestJsonInterceptor, responseJsonInterceptor, responseTextInterceptor } from 'fetching-library';
 
 const cache = createCache(
   (action) => {
@@ -65,14 +65,46 @@ const cache = createCache(
   },
 );
 
+// Options is not required
 const client = createClient({
-  //None of the options is required
-  requestInterceptors: [],
-  responseInterceptors: [],
+  requestInterceptors: [requestJsonInterceptor],
+  responseInterceptors: [responseJsonInterceptor, responseTextInterceptor]
   cacheProvider: cache,
 });
 
-const action:Action= { 
+const action = { 
+  method: 'GET',
+  endpoint: '/users',
+};
+
+client.query(action).then(response => {
+  //response.status
+  //response.error
+  //response.errorObject
+  //response.payload
+});
+
+```
+
+## Example of request interceptor
+
+```js
+import { createClient, requestJsonInterceptor, responseJsonInterceptor } from 'fetching-library';
+
+const requestHostInterceptor: host => client => async action => {
+  return {
+    ...action,
+    endpoint: `${host}${action.endpoint}`,
+  };
+};
+
+const client = createClient({
+  requestInterceptors: [requestJsonInterceptor, requestHostInterceptor('http://example.com')],
+  responseInterceptors: [responseJsonInterceptor]
+  cacheProvider: cache,
+});
+
+const action = { 
   method: 'GET',
   endpoint: '/users',
 };
