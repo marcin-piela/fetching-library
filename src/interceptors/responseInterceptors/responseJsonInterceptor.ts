@@ -3,7 +3,7 @@ import { ResponseInterceptor } from '../../client/client.types';
 const emptyCodes = [204, 205];
 
 export const responseJsonInterceptor: ResponseInterceptor = client => async (action, queryResponse) => {
-  const { response } = queryResponse;
+  const { payload: response } = queryResponse;
 
   if (response && response.constructor.name === 'Response') {
     const contentType = response.headers.get('Content-Type');
@@ -13,7 +13,7 @@ export const responseJsonInterceptor: ResponseInterceptor = client => async (act
 
     return {
       ...queryResponse,
-      response: isJSON ? await response.json() : isEmpty ? await response.text() : response,
+      payload: isJSON ? await response.json() : isEmpty ? await response.text() : response,
     };
   }
 

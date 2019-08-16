@@ -14,14 +14,14 @@ describe('ResponseTextInterceptor test', () => {
 
     const responseInit = {
       error: false,
-      response: 'User Name',
+      payload: 'User Name',
     };
 
     const queryResponse = await responseTextInterceptor(client)(action, responseInit);
 
     expect(queryResponse).toEqual({
       error: false,
-      response: 'User Name',
+      payload: 'User Name',
     });
   });
 
@@ -34,13 +34,13 @@ describe('ResponseTextInterceptor test', () => {
 
     const responseInit = {
       error: false,
-      response: res,
+      payload: res,
     };
 
     const queryResponse = await responseTextInterceptor(client)({}, responseInit);
     expect(queryResponse).toEqual({
       error: false,
-      response: 'User Name',
+      payload: 'User Name',
     });
   });
 });

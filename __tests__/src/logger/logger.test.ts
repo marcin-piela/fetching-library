@@ -41,7 +41,7 @@ describe('Logger test', () => {
     const response: QueryResponse = {
       status: 200,
       error: false,
-      response: [{ id: 1 }, { id: 2 }],
+      payload: [{ id: 1 }, { id: 2 }],
     };
 
     const logger = createLogger({ collapse: false });

@@ -23,7 +23,7 @@ describe('Client test', () => {
 
     const queryResponse: QueryResponse<Response> = await client.query(action);
 
-    const payload = queryResponse.response && (await queryResponse.response.json());
+    const payload = queryResponse.payload && (await queryResponse.payload.json());
 
     expect(payload).toEqual({ users: [] });
     expect(queryResponse.status).toEqual(200);
@@ -41,11 +41,11 @@ describe('Client test', () => {
       users: [],
     });
 
-    const client = createClient({});
+    const client = createClient();
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.response).toEqual({ users: [] });
+    expect(queryResponse.payload).toEqual({ users: [] });
     expect(queryResponse.status).toEqual(200);
     expect(queryResponse.error).toEqual(false);
     queryResponse.headers && expect(queryResponse.headers.get('Content-Length')).toEqual('12');
@@ -59,11 +59,11 @@ describe('Client test', () => {
 
     fetchMock.get(action.endpoint, { status: 204 });
 
-    const client = createClient({});
+    const client = createClient();
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.response).toEqual('');
+    expect(queryResponse.payload).toEqual('');
     expect(queryResponse.status).toEqual(204);
     expect(queryResponse.error).toEqual(false);
   });
@@ -78,11 +78,11 @@ describe('Client test', () => {
       throws: new TypeError('Failed to fetch'),
     });
 
-    const client = createClient({});
+    const client = createClient();
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.response).toEqual(undefined);
+    expect(queryResponse.payload).toEqual(undefined);
     expect(queryResponse.status).toEqual(undefined);
     expect(queryResponse.error).toEqual(true);
     queryResponse.headers && expect(queryResponse.headers.get('Content-Length')).toEqual('12');
@@ -101,10 +101,10 @@ describe('Client test', () => {
     });
 
     const responseInterceptor = () => async (action: Action, response: QueryResponse<any>) => {
-      if (response.response.data) {
+      if (response.payload.data) {
         return {
           ...response,
-          response: response.response.data,
+          payload: response.payload.data,
         };
       }
 
@@ -117,7 +117,7 @@ describe('Client test', () => {
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.response).toEqual({ users: [] });
+    expect(queryResponse.payload).toEqual({ users: [] });
   });
 
   it('intercepts request when requestInterceptor is configured', async () => {
@@ -143,7 +143,7 @@ describe('Client test', () => {
 
     const queryResponse = await client.query(action);
 
-    expect(queryResponse.response).toEqual({ users: [] });
+    expect(queryResponse.payload).toEqual({ users: [] });
   });
 
   it('returns cached value on second fetch and non cached when skipCache flag is provided', async () => {
@@ -174,7 +174,7 @@ describe('Client test', () => {
     });
 
     const queryResponse = await client.query(action);
-    expect(queryResponse.response).toEqual({ users: [] });
+    expect(queryResponse.payload).toEqual({ users: [] });
 
     fetchMock.get(
       action.endpoint,
@@ -189,10 +189,10 @@ describe('Client test', () => {
     );
 
     const cachedQueryResponse = await client.query(action);
-    expect(cachedQueryResponse.response).toEqual({ users: [] });
+    expect(cachedQueryResponse.payload).toEqual({ users: [] });
 
     const nonCachedQueryResponse = await client.query(action, true);
-    expect(nonCachedQueryResponse.response).toEqual({ users: [
+    expect(nonCachedQueryResponse.payload).toEqual({ users: [
       {
         uuid: 1,
       },

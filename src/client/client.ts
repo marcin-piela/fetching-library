@@ -55,7 +55,7 @@ export const createClient = <R = any>(options?: ClientOptions<R>) => {
           {
             error: !response.ok,
             headers: response.headers,
-            response,
+            payload: response,
             status: response.status,
           },
           clientOptions.responseInterceptors || [responseJsonInterceptor, responseTextInterceptor],

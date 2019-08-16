@@ -14,14 +14,14 @@ describe('ResponseJsonIntercepotr test', () => {
 
     const responseInit = {
       error: false,
-      response: 'User Name',
+      payload: 'User Name',
     };
 
     const queryResponse = await responseJsonInterceptor(client)(action, responseInit);
 
     expect(queryResponse).toEqual({
       error: false,
-      response: 'User Name',
+      payload: 'User Name',
     });
   });
 
@@ -35,13 +35,13 @@ describe('ResponseJsonIntercepotr test', () => {
 
     const responseInit = {
       error: false,
-      response: res,
+      payload: res,
     };
 
     const queryResponse = await responseJsonInterceptor(client)({}, responseInit);
     expect(queryResponse).toEqual({
       error: false,
-      response: { user: 'User Name' },
+      payload: { user: 'User Name' },
     });
   });
 
@@ -52,13 +52,13 @@ describe('ResponseJsonIntercepotr test', () => {
 
     const responseInit = {
       error: false,
-      response: res,
+      payload: res,
     };
 
     const queryResponse = await responseJsonInterceptor(client)({}, responseInit);
     expect(queryResponse).toEqual({
       error: false,
-      response: '',
+      payload: '',
     });
   });
 
@@ -72,14 +72,14 @@ describe('ResponseJsonIntercepotr test', () => {
 
     const responseInit = {
       error: false,
-      response: res,
+      payload: res,
     };
 
     const queryResponse = await responseJsonInterceptor(client)({}, responseInit);
 
     expect(queryResponse).toEqual({
       error: false,
-      response: res,
+      payload: res,
     });
   });
 });
