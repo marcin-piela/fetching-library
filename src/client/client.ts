@@ -38,7 +38,7 @@ export const createClient = <R = any>(options?: ClientOptions<R>) => {
           actionInit,
           clientOptions.requestInterceptors || [requestJsonInterceptor],
         );
-        const { endpoint, ...options } = action;
+        const { endpoint, ...restOptions } = action;
 
         if (cache && !skipCache) {
           const cachedResponse = cache.get(actionInit);
@@ -48,7 +48,7 @@ export const createClient = <R = any>(options?: ClientOptions<R>) => {
           }
         }
 
-        const response = await fetch(endpoint, options);
+        const response = await fetch(endpoint, restOptions);
 
         const queryResponse = await handleResponseInterceptors(
           action,
