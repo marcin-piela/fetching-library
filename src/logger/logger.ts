@@ -18,7 +18,7 @@ const formatTitle = (logs: Logs) => {
   return { title, simpleTitle };
 };
 
-export const createLogger = (options: LoggerOptions): Logger => logs => {
+export const createLogger = (options?: LoggerOptions): Logger => logs => {
   const loggerOptions = { ...defaultOptions, ...options };
 
   if (loggerOptions.show) {

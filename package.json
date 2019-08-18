@@ -1,6 +1,6 @@
 {
   "name": "fetching-library",
-  "version": "0.0.1-beta.6",
+  "version": "0.0.1-beta.8",
   "description": "Simple and powerful API client. It's extension for native fetch API. No dependencies!",
   "main": "lib/index.js",
   "files": [

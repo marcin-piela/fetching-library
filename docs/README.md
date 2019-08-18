@@ -205,45 +205,25 @@ const logger = createLogger(options);
 | collapse    | log group should be collapsed             | no            | true         |
 | show        | logs should be shown                      | no            | true          |
 
-You can create request interceptor
 
-
-```js
-export const requestLoggerInterceptor = logger => client => async action => {
-  logger({ action })
-
-  return action;
-};
-```
-
-And response interceptor
-
+And then add it to the Client (remember that order of interceptors matters):
 
 ```js
-export const responseLoggerInterceptor = logger => client => async (action, response) => {
-  logger({ action, response })
+import { 
+  createLogger, 
+  createClient, 
+  requestLoggerInterceptor, 
+  responseLoggerInterceptor, 
+  requestJsonInterceptor, 
+  responseJsonInterceptor,
+  responseTextInterceptor 
+} from 'fetching-library';
 
-  return response;
-};
-```
-
-#### Available options
-
-| option      | description                | required |
-| ------------| -------------------------- | -------- |
-| action      | [`Action`][] object        | yes      |
-| response    | [`QueryResponse`][] object | no       |
-
-And then add it to the Client:
-
-```js
-import { createLogger, createClient } from 'fetching-library';
-
-const logger = createLogger({})
+const logger = createLogger();
 
 export const client = createClient({
-  requestInterceptors: [requestLoggerInterceptor(logger)]
-  responseInterceptors: [responseInterceptor(logger)]
+  requestInterceptors: [requestJsonInterceptor, requestLoggerInterceptor(logger)],
+  responseInterceptors: [responseJsonInterceptor, responseTextInterceptor, responseInterceptor(logger)]
 });
 ```
 
